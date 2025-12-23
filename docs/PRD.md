@@ -1,164 +1,87 @@
-PRD v1 — Decision by Cards (Working Title)
-1. Overview
+# Product Requirements Document – Decision by Cards
 
-Decision by Cards is a lightweight web interface designed to help users resolve trivial, low-stakes decisions by playing a single, simplified hand of blackjack. The product externalizes indecision through a familiar probabilistic mechanic and produces a clear directive outcome in under 30 seconds.
+**Version:** 1.1 (Post V1 deployment)
+**Owner:** Stephane Brochu
+**Last Updated:** 2025-12-23
 
-This is not a game, gambling product, or entertainment experience. It is a decision aid.
+## 1. Purpose
 
-2. Problem Statement
+Provide a simple, interactive web app where users can play a “decision by cards” game. Users draw cards for themselves and a dealer to get guidance on a decision (Proceed / Do not proceed / Try again).
 
-Users frequently experience decision paralysis around low-impact choices (e.g., “Should I go out?”, “Should I start this task now?”). Traditional productivity tools are overkill for these moments, while randomizers feel arbitrary and unengaging.
 
-There is an opportunity to:
+---
 
-Reduce cognitive load
+## 2. Functional Requirements
 
-Provide a deterministic outcome
+| Feature            | Description                                                      | Status      |
+| ------------------ | ---------------------------------------------------------------- | ----------- |
+| Start Game         | “DECIDE” button initializes deck and hands                       | ✅ Completed |
+| Player Actions     | HIT / STAND buttons allow drawing cards or ending turn           | ✅ Completed |
+| Dealer Actions     | Dealer draws automatically until ≥17                             | ✅ Completed |
+| Outcome Evaluation | Compare player and dealer totals to show guidance                | ✅ Completed |
+| Restart Game       | “DECIDE AGAIN” button resets the game                            | ✅ Completed |
+| Responsive Layout  | Dealer hand above player hand on mobile, side-by-side on desktop | ✅ Completed |
+| Card Flip          | Dealer’s second card initially hidden, flips on resolution       | ✅ Completed |
 
-Do so in a playful but bounded way
+---
 
-3. Goals & Success Criteria
-Primary Goal
+## 3. Components
 
-Enable a user to reach a decision outcome quickly and confidently.
+**Home Page (`page.tsx`)**
 
-Success Metrics (Qualitative / MVP)
+* Handles main game logic, state management, and layout.
+* Uses `HandsLayout` subcomponent for displaying hands.
 
-User reaches an outcome in < 30 seconds
+**CardBox (`components/CardBox.tsx`)**
 
-Flow is understandable without instructions
+* Props: `name`, `suit`, `hidden`, `reveal`.
+* Displays card front or back with flip animation.
+* Used for both player and dealer hands.
 
-User can restart and re-decide without friction
+**Utils**
 
-4. Non-Goals (Explicitly Out of Scope)
+* `deck.ts` – Create and shuffle deck, define Card type.
+* `handEvaluator.ts` – Evaluate hand totals, handle Ace adjustments.
 
-Gambling mechanics (chips, money, betting)
+---
 
-Full blackjack ruleset (splits, double down, insurance)
+## 4. Gameplay Flow
 
-Animations, sound, or visual card assets
+```
+Idle -> Player Turn -> Resolution -> Idle
+```
 
-User accounts or persistence
+1. **Idle:** User clicks DECIDE → new deck + hands are created.
+2. **Player Turn:** User HITs or STANDs. Dealer card partially hidden.
+3. **Resolution:** Dealer completes turn, outcome displayed, hidden cards revealed.
+4. **Restart:** User clicks DECIDE AGAIN → resets game.
 
-Statistics, history, or optimization
+---
 
-5. Target User
+## 5. Responsive Layout Diagram
 
-Anyone facing low-stakes, reversible decisions
+```
+Mobile Layout (flex-col):
+[Dealer Hand]
+[Player Hand]
 
-Users who respond well to externalized decision-making
+Desktop Layout (flex-row):
+[Dealer Hand]  [Player Hand]
+```
 
-Not targeted at gamblers or competitive players
+---
 
-6. Core User Flow (MVP)
+## 6. Deployment
 
-Landing State
+* Hosted via Vercel, branch `main`.
+* Dependencies: Next.js 16.1.1, TypeScript.
+* To run locally: `npm install` → `npm run dev`
 
-Single primary CTA: DECIDE
+---
 
-Minimal supporting copy (e.g., “Let the cards decide.”)
+## 7. Future Enhancements (Backlog)
 
-Initial Deal
-
-User is dealt 2 cards
-
-Dealer is dealt 1 visible card
-
-Card values and hand totals are displayed numerically
-
-Decision Phase
-
-User can choose:
-
-HIT
-
-STAND
-
-Resolution
-
-If user busts → immediate outcome
-
-If user stands → dealer auto-plays to completion
-
-Outcome State
-
-Clear directive message displayed
-
-Reset
-
-CTA: DECIDE AGAIN
-
-7. Decision Framework
-Blackjack Result	Decision Outcome
-User wins	Proceed with decision
-Dealer wins	Do not proceed
-Push (tie)	Undecided / Try again
-
-This mapping must be explicit and consistent across the experience.
-
-8. Functional Requirements
-Required
-
-Generate a standard 52-card deck (suits optional, values required)
-
-Deal cards randomly without replacement
-
-Calculate hand totals with Ace logic (1 or 11)
-
-Enforce:
-
-User hit/stand rules
-
-Dealer hits until total ≥ 17
-
-Determine win / loss / push
-
-Display outcome clearly
-
-Error Handling
-
-Prevent invalid actions (e.g., hit after stand)
-
-Graceful reset on edge cases
-
-9. UX & UI Principles
-
-Minimal visual hierarchy
-
-Large, obvious primary actions
-
-No unnecessary copy
-
-No animations required for MVP
-
-“Ugly but clear” is acceptable
-
-10. Technical Constraints (MVP)
-
-Client-side only
-
-No backend required
-
-Deterministic, testable game logic
-
-Logic separated from UI components
-
-11. Future Considerations (Explicitly Not in v1)
-
-Decision labeling (user inputs what they’re deciding)
-
-Alternate decision mappings
-
-Accessibility enhancements
-
-Theming or tone variants
-
-Persistence or sharing
-
-12. Open Questions (Post-MVP)
-
-Does ambiguity (push) frustrate or reinforce trust?
-
-Is blackjack the optimal mechanic vs alternatives?
-
-Does minimalism improve or reduce confidence in outcome?
+* Add **sound effects** and card flip animation sounds.
+* Option for **multiple cards decisions** (e.g., 3-card spread).
+* Track **user decision history**.
+* Improve accessibility (ARIA labels for cards, keyboard controls).
