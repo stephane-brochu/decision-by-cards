@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createDeck, Card } from "../utils/deck";
 import { evaluateHand } from "../utils/handEvaluator";
-import CardBox from "./CardBox";
+import CardBox from "./components/CardBox";
 
 type GameState = "idle" | "playerTurn" | "dealerTurn" | "resolution";
 
@@ -52,8 +52,8 @@ export default function Home() {
 
     const playerTotal = evaluateHand(playerHand);
     let result = "";
-    if (dTotal > 21 || playerTotal > dTotal) result = "Proceed";
-    else if (playerTotal < dTotal) result = "Do not proceed";
+    if (dTotal > 21 || playerTotal > dTotal) result = "Do it";
+    else if (playerTotal < dTotal) result = "Don't do it";
     else result = "Try again";
 
     setOutcome(result);
