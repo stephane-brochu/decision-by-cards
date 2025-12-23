@@ -21,8 +21,8 @@ The user is not attempting to “win a game” — they are engaging with a prob
 
 | Blackjack Result | Decision Outcome |
 |------------------|------------------|
-| User wins        | Proceed |
-| Dealer wins      | Do not proceed |
+| User wins        | Do it |
+| Dealer wins      | Don't do it |
 | Push (tie)       | Undecided / Try again |
 
 This mapping is fixed and non-configurable in MVP.
