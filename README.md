@@ -163,28 +163,3 @@ npm start
 ```
 
 ---
-
-## Next Steps
-
-* Add screenshots for each game state.
-* Include instructions for modifying card rules or deck settings.
-* Potentially add scoring, multiple rounds, or player profiles.
-* Enhance styling and animations for a more polished experience.
-
----
-
-## License
-
-MIT License
-
----
-
-### Component Diagram (Optional Visual)
-
-```
-🃏 Home
-├─ 🂠 Dealer hand
-│   └─ 🂡 CardBox
-└─ 🂠 Player hand
-    └─ 🂢 CardBox
-```
