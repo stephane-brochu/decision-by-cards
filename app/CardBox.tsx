@@ -21,18 +21,20 @@ export default function CardBox({ name, suit, hidden = false, reveal = false }: 
   return (
     <div
       className={`w-12 h-16 border rounded-lg flex items-center justify-center text-lg font-semibold
-        bg-white shadow-sm transition-transform duration-500 ease-in-out transform
+        shadow-sm transition-transform duration-500 ease-in-out transform
         ${flipped ? "" : "rotate-y-180 bg-gray-200"}
       `}
-      style={{ perspective: "600px" }}
+      style={{ perspective: "600px", transformStyle: "preserve-3d" }}
     >
       {flipped ? (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center backface-hidden">
           <span>{name}</span>
           <span>{suit}</span>
         </div>
       ) : (
-        <div className="flex items-center justify-center w-full h-full text-xl">?</div>
+        <div className="flex items-center justify-center w-full h-full text-xl backface-hidden">
+          ?
+        </div>
       )}
     </div>
   );

@@ -107,7 +107,7 @@ export default function Home() {
                     name={dealerHand[1].name}
                     suit={dealerHand[1].suit}
                     hidden
-                    reveal={gameState === "resolution"}
+                    reveal={false} // Always false during playerTurn
                   />
                 )}
               </div>
@@ -129,10 +129,6 @@ export default function Home() {
             </button>
           </div>
         </div>
-      )}
-
-      {gameState === "dealerTurn" && (
-        <div className="text-2xl font-semibold">Dealer is playing…</div>
       )}
 
       {gameState === "resolution" && (
