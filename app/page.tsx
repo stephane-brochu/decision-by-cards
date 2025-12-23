@@ -68,6 +68,43 @@ export default function Home() {
     setGameState("idle");
   };
 
+  const HandsLayout: React.FC<{
+    playerHand: Card[];
+    dealerHand: Card[];
+    revealDealer?: boolean;
+    showPlayerTotal?: boolean;
+  }> = ({ playerHand, dealerHand, revealDealer = false, showPlayerTotal = true }) => (
+    <div className="flex flex-col md:flex-row gap-8 md:gap-16" style={{ perspective: "600px" }}>
+      {/* Dealer hand */}
+      <div className="flex flex-col items-center gap-2">
+        <div className="font-semibold">Dealer {revealDealer ? "hand" : "shows"}:</div>
+        <div className="flex gap-2">
+          {dealerHand.map((c, idx) => (
+            <CardBox
+              key={idx}
+              name={c.name}
+              suit={c.suit}
+              hidden={!revealDealer && idx > 0}
+              reveal={revealDealer}
+            />
+          ))}
+        </div>
+        {revealDealer && <div>Total: {evaluateHand(dealerHand)}</div>}
+      </div>
+
+      {/* Player hand */}
+      <div className="flex flex-col items-center gap-2">
+        <div className="font-semibold">Your hand:</div>
+        <div className="flex gap-2">
+          {playerHand.map((c, idx) => (
+            <CardBox key={idx} name={c.name} suit={c.suit} />
+          ))}
+        </div>
+        {showPlayerTotal && <div>Total: {evaluateHand(playerHand)}</div>}
+      </div>
+    </div>
+  );
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-6 p-4">
       {gameState === "idle" && (
@@ -82,38 +119,7 @@ export default function Home() {
       {gameState === "playerTurn" && (
         <div className="flex flex-col items-center gap-6">
           <div className="text-2xl font-semibold mb-2">Your turn</div>
-
-          <div className="flex gap-16" style={{ perspective: "600px" }}>
-            {/* Player hand */}
-            <div className="flex flex-col items-center gap-2">
-              <div className="font-semibold">Your hand:</div>
-              <div className="flex gap-2">
-                {playerHand.map((c, idx) => (
-                  <CardBox key={idx} name={c.name} suit={c.suit} />
-                ))}
-              </div>
-              <div>Total: {evaluateHand(playerHand)}</div>
-            </div>
-
-            {/* Dealer shows */}
-            <div className="flex flex-col items-center gap-2">
-              <div className="font-semibold">Dealer shows:</div>
-              <div className="flex gap-2">
-                {dealerHand.length > 0 && (
-                  <CardBox name={dealerHand[0].name} suit={dealerHand[0].suit} />
-                )}
-                {dealerHand.length > 1 && (
-                  <CardBox
-                    name={dealerHand[1].name}
-                    suit={dealerHand[1].suit}
-                    hidden
-                    reveal={false} // Always false during playerTurn
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-
+          <HandsLayout playerHand={playerHand} dealerHand={dealerHand} />
           <div className="flex gap-4 mt-4">
             <button
               onClick={handleHit}
@@ -134,31 +140,7 @@ export default function Home() {
       {gameState === "resolution" && (
         <div className="flex flex-col items-center gap-4">
           <div className="text-2xl font-semibold">Outcome: {outcome}</div>
-
-          <div className="flex gap-16 mt-2" style={{ perspective: "600px" }}>
-            {/* Player hand */}
-            <div className="flex flex-col items-center gap-2">
-              <div className="font-semibold">Your hand:</div>
-              <div className="flex gap-2">
-                {playerHand.map((c, idx) => (
-                  <CardBox key={idx} name={c.name} suit={c.suit} />
-                ))}
-              </div>
-              <div>Total: {evaluateHand(playerHand)}</div>
-            </div>
-
-            {/* Dealer hand */}
-            <div className="flex flex-col items-center gap-2">
-              <div className="font-semibold">Dealer hand:</div>
-              <div className="flex gap-2">
-                {dealerHand.map((c, idx) => (
-                  <CardBox key={idx} name={c.name} suit={c.suit} reveal />
-                ))}
-              </div>
-              <div>Total: {evaluateHand(dealerHand)}</div>
-            </div>
-          </div>
-
+          <HandsLayout playerHand={playerHand} dealerHand={dealerHand} revealDealer />
           <button
             onClick={handleRestart}
             className="px-6 py-3 border rounded-lg hover:bg-gray-200 transition mt-4"
